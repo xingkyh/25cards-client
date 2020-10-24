@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/menu"
+    tools:context=".MenuActivity">
+
+    <Button
+        android:id="@+id/out"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:background="@drawable/out" />
+
+    <Button
+        android:id="@+id/classical"
+        android:layout_width="130dp"
+        android:layout_height="100dp"
+        android:textSize="25dp"
+        android:text="经 典"
+        android:background="@drawable/button_circle_shape_oragen"/>
+
+    <Button
+        android:id="@+id/competition"
+        android:text="比 赛"
+        android:background="@drawable/button_circle_shape_grey"
+        android:textSize="25dp"
+        android:layout_width="130dp"
+        android:layout_height="100dp"/>
+
+    <Button
+        android:id="@+id/rank"
+        android:layout_width="130dp"
+        android:layout_height="100dp"
+        android:textSize="25dp"
+        android:fontFamily=""
+        android:background="@drawable/button_circle_shape_grey"
+        android:text="排 位" />
+
+    <Button
+        android:id="@+id/ending"
+        android:layout_width="130dp"
+        android:layout_height="100dp"
+        android:textSize="25dp"
+        android:background="@drawable/button_circle_shape_grey"
+        android:text="残 局" />
+
+    <ImageView
+        android:id="@+id/player"
+        android:layout_width="300dp"
+        android:layout_height="250dp"
+
+        app:srcCompat="@drawable/player" />
+</RelativeLayout>
