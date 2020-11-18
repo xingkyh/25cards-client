@@ -53,7 +53,7 @@ public class ClientThread implements Runnable {
     public void run() {
         s = new Socket();
         try {
-            s.connect(new InetSocketAddress("172.20.10.3", 3000), 5000);
+            s.connect(new InetSocketAddress("192.168.1.130", 3000), 5000);
             s.setKeepAlive(true);
             is = new DataInputStream(s.getInputStream());
             os = new DataOutputStream(s.getOutputStream());
