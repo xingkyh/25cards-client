@@ -13,7 +13,7 @@ public class CardSlideThread extends Thread{
     public CardSlideThread(Deck deck, int index) {
         this.deck = deck;
         this.index = index;
-        this.spanSlide = 50;
+        this.spanSlide = 50;     //定义一个单位的移动距离
     }
     @Override
     public void run() {
