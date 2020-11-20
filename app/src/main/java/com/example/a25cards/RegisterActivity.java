@@ -79,6 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                                 String result = reader.readLine();//读取服务器进行逻辑处理后页面显示的数据
                                 if(result.equals("Register Successful")){
+                                    //注册成功则跳转到登录界面
                                     it = new Intent(RegisterActivity.this,LoginActivity.class);
                                     bundle = new Bundle();
                                     bundle.putString("userName",username);

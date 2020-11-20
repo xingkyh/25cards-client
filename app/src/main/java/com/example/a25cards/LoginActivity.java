@@ -47,8 +47,13 @@ public class LoginActivity extends AppCompatActivity {
         editor = sharedPreferences.edit();
         username = sharedPreferences.getString("username","");
         password = sharedPreferences.getString("username","");
+        //获取Activity中Intent中的bundle
         Intent it = getIntent();
         Bundle bundle = it.getExtras();
+        /*这一步中主要是判断bundle是不是null，因为只有在注册的Activity中再跳转Activity中才会存入bundle
+        *如果bundle是null则是用户直接点击登录按钮所以才无bundle，
+        *如果bundle不为null的情况下就是先注册后直接跳到loginActivity中，对EditText中的内容设置为刚注册的用户名
+        */
         if(username==null && password==null && bundle==null){
             et_username.setText("");
             et_password.setText("");
@@ -93,9 +98,11 @@ public class LoginActivity extends AppCompatActivity {
                                     editor.putString("password",password);
                                     editor.commit();
                                 }
+                                //跳转到菜单Activity中同时存入用户名
                                 Intent intent = new Intent(LoginActivity.this,MenuActivity.class);
                                 intent.putExtra("name",username);
                                 startActivity(intent);
+                                //结束LoginActivity的生命周期
                                 LoginActivity.this.finish();
                             }
                             else{
