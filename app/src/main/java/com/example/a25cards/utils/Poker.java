@@ -36,7 +36,7 @@ public class Poker implements Comparable<Poker>{
     @Override
     public boolean equals(Object o){
         Poker poker = (Poker)o;
-        if(poker.id == this.id){
+        if(poker.orderValue == this.orderValue){
             return true;
         }
         return false;
