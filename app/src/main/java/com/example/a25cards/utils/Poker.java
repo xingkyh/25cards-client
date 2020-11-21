@@ -45,6 +45,33 @@ public class Poker implements Comparable<Poker>{
     @Override
     // 实现Comparable接口的方法，用于排序
     public int compareTo(Poker poker) {
+        // 同类型的牌按黑桃、红桃、梅花、方块的顺序排序
+        if (this.orderValue == poker.orderValue){
+            return poker.id - this.id;
+        }
         return this.orderValue - poker.orderValue;
+    }
+
+    /**
+     * 获取牌id对应的牌名
+     */
+    public String getPoker(){
+        StringBuilder pokerName = new StringBuilder();
+        if (this.id == 53){
+            pokerName.append("小王");
+        }else if (this.id == 54){
+            pokerName.append("大王");
+        }else {
+            // 牌的种类
+            String[] kind = {"黑桃", "红桃", "梅花", "方块"};
+            String[] name = {"J", "Q", "K", "A", "2"};
+            pokerName.append(kind[this.id % 4]);
+            if (this.orderValue <= 8){
+                pokerName.append(this.orderValue + 2);
+            }else {
+                pokerName.append(name[this.orderValue - 8]);
+            }
+        }
+        return new String(pokerName);
     }
 }
