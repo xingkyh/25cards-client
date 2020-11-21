@@ -51,9 +51,9 @@ public class Poker implements Comparable<Poker>{
     public int compareTo(Poker poker) {
         // 同类型的牌按黑桃、红桃、梅花、方块的顺序排序
         if (this.orderValue == poker.orderValue){
-            return poker.id - this.id;
+            return this.id - poker.id;
         }
-        return this.orderValue - poker.orderValue;
+        return poker.orderValue - this.orderValue;
     }
 
     /**
