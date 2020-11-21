@@ -33,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
         float density = dm.density;
         float screenWidth = dm.widthPixels;
         float screenHeight = dm.heightPixels;
-        register.setX((float) 0.03*screenWidth);
+        //分别设置登录和注册按钮的位置，通过获取到的设置的长款来动态设置按钮的位置
+        register.setX((float) 0.07*screenWidth);
         register.setY((float)0.73*screenHeight);
         login.setX((float)0.54*screenWidth);
         login.setY((float)0.73*screenHeight);
