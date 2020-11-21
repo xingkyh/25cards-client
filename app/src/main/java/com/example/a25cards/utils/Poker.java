@@ -36,10 +36,14 @@ public class Poker implements Comparable<Poker>{
     @Override
     public boolean equals(Object o){
         Poker poker = (Poker)o;
-        if(poker.orderValue == this.orderValue){
-            return true;
-        }
-        return false;
+        return this.id == poker.id;
+    }
+
+    /**
+     * 判断是否为同一类型的牌
+     */
+    public boolean isSameType(Poker poker){
+        return this.orderValue == poker.id;
     }
 
     @Override
