@@ -14,16 +14,16 @@ import java.util.Map;
  */
 public class PokerTypeUtils {
     // 定义牌型
-    private static final int typeBoom = 1;          // 炸弹
-    private static final int typeKingBoom = 2;      // 王炸，四张王
-    private static final int typeSingle = 3;        // 单张牌
-    private static final int typePair = 4;          // 对子
-    private static final int typeThree = 5;         // 三张牌
-    private static final int typeThreePair = 6;     // 三带一对
-    private static final int typeStraight = 7;      // 顺子
-    private static final int typeStraightPair = 8;  // 连对
-    private static final int typePlane = 9;         // 飞机
-    private static final int typePlanePair = 10;    // 飞机带翅膀（仅能带对子）
+    public static final int typeBoom = 1;          // 炸弹
+    public static final int typeKingBoom = 2;      // 王炸，四张王
+    public static final int typeSingle = 3;        // 单张牌
+    public static final int typePair = 4;          // 对子
+    public static final int typeThree = 5;         // 三张牌
+    public static final int typeThreePair = 6;     // 三带一对
+    public static final int typeStraight = 7;      // 顺子
+    public static final int typeStraightPair = 8;  // 连对
+    public static final int typePlane = 9;         // 飞机
+    public static final int typePlanePair = 10;    // 飞机带翅膀（仅能带对子）
 
     /**
      * 判断该牌所属的牌型，属于正确牌型则返回该牌牌型的对象，错误牌型则返回null
