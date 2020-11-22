@@ -1,5 +1,7 @@
 package com.example.a25cards.utils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +34,7 @@ public class PokerTypeUtils {
         }
         // 判断牌是否相同
         for (int i = 1; i < pokers.size(); i++){
-            if (pokers.get(i - 1).equals(pokers.get(i))){
+            if (pokers.get(i - 1).isSameType(pokers.get(i))){
                 return null;
             }
         }
@@ -75,7 +77,7 @@ public class PokerTypeUtils {
             return null;
         }
         // 是否为同一类型的牌
-        if (pokers.get(0).equals(pokers.get(1))){
+        if (pokers.get(0).isSameType(pokers.get(1))){
             return new PokerType(typePair, 2, pokers.get(0).getOrderValue());
         }
         return null;
@@ -89,7 +91,7 @@ public class PokerTypeUtils {
             return null;
         }
         // 三张牌是否为同一类型的牌
-        if (pokers.get(0).equals(pokers.get(1)) && pokers.get(1).equals(pokers.get(2))){
+        if (pokers.get(0).isSameType(pokers.get(1)) && pokers.get(1).isSameType(pokers.get(2))){
             return new PokerType(typeThree, 3, pokers.get(0).getOrderValue());
         }
         return null;
@@ -137,7 +139,85 @@ public class PokerTypeUtils {
                 return null;
             }
         }
-        return new PokerType(typeStraight, pokers.size(), pokers.get(pokers.size() - 1).getOrderValue());
+        return new PokerType(typeStraight, pokers.size(), pokers.get(0).getOrderValue());
+    }
+
+    /**
+     * 判断牌型是否为连对，是则返回牌型的对象，否则返回null
+     */
+    public static PokerType isStraightPair(List<Poker> pokers){
+        if (pokers.size() < 6 || pokers.size() % 2 != 0){
+            return null;
+        }
+        for (int i = 0; i < pokers.size(); i+=2){
+            // 判断牌是否为对子
+            if (!pokers.get(i).isSameType(pokers.get(i + 1))){
+                return null;
+            }
+            // 判断相邻的对子牌大小是否连续
+            if (i + 2 < pokers.size()){
+                if (pokers.get(i).getOrderValue() - pokers.get(i + 2).getOrderValue() != 1){
+                    return null;
+                }
+            }
+        }
+        return new PokerType(typeStraightPair, pokers.size(), pokers.get(0).getOrderValue());
+    }
+
+    /**
+     * 判断牌型是否为飞机，是则返回牌型的对象，否则返回null
+     */
+    public static PokerType isPlane(List<Poker> pokers){
+        if (pokers.size() < 6 || pokers.size() % 3 != 0){
+            return null;
+        }
+        for (int i = 0; i < pokers.size(); i +=3){
+            // 判断是否为三张同类型的牌
+            if (!pokers.get(i).isSameType(pokers.get(i + 1)) || !pokers.get(i).isSameType(pokers.get(i + 2))){
+                return null;
+            }
+            // 判断相邻的三张牌大小是否连续
+            if (i + 3 < pokers.size()){
+                if (pokers.get(i).getOrderValue() - pokers.get(i + 3).getOrderValue() != 1){
+                    return null;
+                }
+            }
+        }
+        return new PokerType(typePlane, pokers.size(), pokers.get(0).getOrderValue());
+    }
+
+    /**
+     * 判断牌型是否为飞机带翅膀，是则返回牌型的对象，否则返回null
+     */
+    public static PokerType isPlanePair(List<Poker> pokers){
+        if (pokers.size() < 10 || pokers.size() % 5 != 0){
+            return null;
+        }
+        Map<Integer, Integer> kind = getKindMap(pokers);
+        int pair = 0;// 对子的数量
+        int three = 0;// 三张牌的数量
+        List<Integer> threeList = new ArrayList<>();// 存放三张牌牌的类型
+        for (Map.Entry<Integer, Integer> entry:kind.entrySet()){
+            if (entry.getValue() == 2){
+                pair++;
+            }else if (entry.getValue() == 3){
+                three++;
+                threeList.add(entry.getKey());
+            }
+        }
+        // 对子的数量与三张牌的数量相等并且等于牌的数量除以5
+        if (pair == three && pair == pokers.size() / 5){
+            // 将三张牌牌的类型进行排序
+            Collections.sort(threeList);
+            // 判断牌的大小是否连续
+            for (int i = 0; i < threeList.size() - 1; i++){
+                if (threeList.get(i + 1) - threeList.get(i) != 1){
+                    return null;
+                }
+            }
+            return new PokerType(typePlanePair, pokers.size(), threeList.get(threeList.size() - 1));
+        }
+        return null;
     }
 
     /**
