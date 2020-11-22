@@ -257,7 +257,7 @@ public class PokerTypeUtils {
     /**
      * 获取牌的种类以及其对应牌数量的map
       */
-    private static Map<Integer, Integer> getKindMap(List<Poker> pokers){
+    public static Map<Integer, Integer> getKindMap(List<Poker> pokers){
         Map<Integer, Integer> kind = new HashMap<>();
         for (Poker poker:pokers){
             if (kind.containsKey(poker.getOrderValue())){

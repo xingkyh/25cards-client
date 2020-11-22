@@ -29,6 +29,10 @@ public class PokerUtils {
             13,13,13,13,// 2
             14,15// 小王，大王
     });
+    // 大于所有牌的大小的常量值，后续需要用到
+    public static final int MAX = 16;
+    // 小于所有牌的大小的常量值，后续需要用到
+    public static final int MIN = 0;
 
     /**
      * 随机生成两副牌
