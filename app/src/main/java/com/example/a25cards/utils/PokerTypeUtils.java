@@ -26,6 +26,40 @@ public class PokerTypeUtils {
     private static final int typePlanePair = 10;    // 飞机带翅膀（仅能带对子）
 
     /**
+     * 判断该牌所属的牌型，属于正确牌型则返回该牌牌型的对象，错误牌型则返回null
+     */
+    public static PokerType getType(List<Poker> pokers){
+        // 对牌进行排序
+        Collections.sort(pokers);
+        PokerType pokerType = null;
+        if (pokers.size() < 4){
+            // 是否为单张牌
+            if ((pokerType = isSingle(pokers)) != null) return pokerType;
+            // 是否为对子
+            if ((pokerType = isPair(pokers)) != null) return pokerType;
+            // 是否为三张牌
+            if ((pokerType = isThree(pokers)) != null) return pokerType;
+        }else {
+            // 是否为炸弹
+            if ((pokerType = isBoom(pokers)) != null) return pokerType;
+            // 是否为王炸
+            if ((pokerType = isKingBoom(pokers)) != null) return pokerType;
+            // 是否为三带一对
+            if ((pokerType = isThreePair(pokers)) != null) return pokerType;
+            // 是否为顺子
+            if ((pokerType = isStraight(pokers)) != null) return pokerType;
+            // 是否为连对
+            if ((pokerType = isStraightPair(pokers)) != null) return pokerType;
+            // 是否为飞机
+            if ((pokerType = isPlane(pokers)) != null) return pokerType;
+            // 是否为飞机带翅膀
+            if ((pokerType = isPlanePair(pokers)) != null) return pokerType;
+        }
+        // 全不是则为错误牌型
+        return null;
+    }
+
+    /**
      * 判断牌型是否为炸弹，是则返回牌型的对象，否则返回null
      */
     public static PokerType isBoom(List<Poker> pokers){
