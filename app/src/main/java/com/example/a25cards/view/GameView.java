@@ -297,16 +297,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         getHolder().addCallback(this);
         flushThread= new FlushThread(getHolder(), this);
         assetManager = context.getAssets();
+        //获得资源文件
         Resources resources = this.getResources();
+        //利用DisplayMetrics类获取屏幕大小
         DisplayMetrics dm  = resources.getDisplayMetrics();
+        //获得显示器的逻辑密度
         float density = dm.density;
+        //获得屏幕的像素宽度，单位是px
         screenWidth = dm.widthPixels;
+        //获得屏幕的像素高度，单位是px
         screenHeight = dm.heightPixels;
         init();
     }
 
     private void baseDraw(Canvas canvas) {
-        // 牌桌
+        // 绘制牌桌，使用Canvas类绘制图形画布
+        //deskPaint中绘制该区域画布
         deskPaint(canvas);
 
         // 人物
@@ -377,6 +383,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawBitmap(bt_discard, (float)0.7* screenWidth ,(float)0.58*screenHeight,null);
     }
     private void deskPaint(Canvas canvas) {
+        //使用drawBitmap来对Bitmap图片对象进行偏移，左、顶偏移均为0，同时不用画笔
+
         canvas.drawBitmap(desk, 0, 0, null);
     }
 
