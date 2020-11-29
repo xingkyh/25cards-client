@@ -9,16 +9,16 @@
 
     <Button
         android:id="@+id/login"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
+        android:layout_width="170dp"
+        android:layout_height="52dp"
         android:background="@drawable/button_circle_shape_blue"
         android:text="登 录"
         android:textSize="22dp" />
 
     <Button
         android:id="@+id/register"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
+        android:layout_width="170dp"
+        android:layout_height="52dp"
         android:layout_toRightOf="@+id/login"
         android:background="@drawable/button_circle_shape_green"
         android:text="注 册"

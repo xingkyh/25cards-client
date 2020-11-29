@@ -55,6 +55,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap bt_nocall;
     private Bitmap dz;
     private Bitmap nm;
+    //通过AssetManager对应用程序的原始资源文件进行访问
     private AssetManager assetManager;
     private int screenWidth ;//屏幕宽度
 
@@ -297,16 +298,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         getHolder().addCallback(this);
         flushThread= new FlushThread(getHolder(), this);
         assetManager = context.getAssets();
+        //获得资源文件
         Resources resources = this.getResources();
+        //利用DisplayMetrics类获取屏幕大小
         DisplayMetrics dm  = resources.getDisplayMetrics();
+        //获得显示器的逻辑密度
         float density = dm.density;
+        //获得屏幕的像素宽度，单位是px
         screenWidth = dm.widthPixels;
+        //获得屏幕的像素高度，单位是px
         screenHeight = dm.heightPixels;
         init();
     }
 
     private void baseDraw(Canvas canvas) {
-        // 牌桌
+        // 绘制牌桌，使用Canvas类绘制图形画布
+        //deskPaint中绘制该区域画布
         deskPaint(canvas);
 
         // 人物
@@ -377,10 +384,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawBitmap(bt_discard, (float)0.7* screenWidth ,(float)0.58*screenHeight,null);
     }
     private void deskPaint(Canvas canvas) {
+        //使用drawBitmap来对Bitmap图片对象进行偏移，左、顶偏移均为0，同时不用画笔
+
         canvas.drawBitmap(desk, 0, 0, null);
     }
 
     private void init() {
+        //存入对应assets资源文件底下的图像资源，以便后续利用AssetManager进行图像访问
         String deskSrc = "images/牌桌.jpg";
         String cardSrc = "images/方块2.png";
         String pokerBackSrc = "images/牌背面.png";
@@ -398,6 +408,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         String nmSrc = "images/nm.png";
 
         try {
+            //利用BitmapFactory来从指定输入流（在这里是assets底下的各种图片）中解析、创建BitMap对象
             desk = BitmapFactory.decodeStream(assetManager.open(deskSrc));
             card = BitmapFactory.decodeStream(assetManager.open(cardSrc));
             pokerBack = BitmapFactory.decodeStream(assetManager.open(pokerBackSrc));
@@ -416,9 +427,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             //屏幕自适应大小
             Matrix matrix = new Matrix();
+            //利用potscale实现对牌桌的缩放以适应屏幕，同时需要强转为float型才符合函数要求，由于不是固定死的内容，所以这里并不设置中心点
             matrix.postScale((float)(1.0*screenWidth/desk.getWidth()), (float)(1.0*screenHeight/desk.getHeight()));
+            //在这里就实现了对牌桌的创建BitMap对象，同时利用Matrix矩阵对象而形成X轴Y轴的缩放
             desk = Bitmap.createBitmap(desk, 0, 0, desk.getWidth(),desk.getHeight(),matrix,true);
 
+            //以下是对牌各种BitMap对象进行缩放处理，包括有展示出来的扑克牌背面，以及准备图形等
             matrix = new Matrix();
             matrix.postScale(rate, rate);
             pokerBack = Bitmap.createBitmap(pokerBack, 0, 0, pokerBack.getWidth(), pokerBack.getHeight(),matrix,true);
@@ -443,6 +457,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         spanX = (float)0.025*screenWidth;
         initX = (float) ((float) getScreenWidth()/2.0);
         initY = (float)0.75*screenHeight;
+        //因为已经做过缩放处理，所以此时要对应乘上缩放比例
         cardWidth = (float)(pokerBack.getWidth()*1.5);
     }
 
