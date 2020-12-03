@@ -44,7 +44,7 @@
         android:layout_height="100dp"
         android:textSize="25dp"
         android:background="@drawable/button_circle_shape_grey"
-        android:text="残 局" />
+        android:text="单 机" />
 
     <ImageView
         android:id="@+id/player"

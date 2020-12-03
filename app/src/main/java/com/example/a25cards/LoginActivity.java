@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         //SharedPreferences SharedPreferences = getSharedPreferences("configuration",0);
         editor = sharedPreferences.edit();
         username = sharedPreferences.getString("username","");
-        password = sharedPreferences.getString("username","");
+        password = sharedPreferences.getString("password","");
         //获取Activity中Intent中的bundle
         Intent it = getIntent();
         Bundle bundle = it.getExtras();
