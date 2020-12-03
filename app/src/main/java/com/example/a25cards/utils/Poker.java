@@ -73,7 +73,7 @@ public class Poker implements Comparable<Poker>{
             if (this.orderValue <= 8){
                 pokerName.append(this.orderValue + 2);
             }else {
-                pokerName.append(name[this.orderValue - 8]);
+                pokerName.append(name[this.orderValue - 9]);
             }
         }
         return new String(pokerName);
