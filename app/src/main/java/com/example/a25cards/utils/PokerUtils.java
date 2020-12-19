@@ -51,7 +51,7 @@ public class PokerUtils {
         Collections.shuffle(pokerId);
         // 生成牌的类，并放入list中
         for(int id:pokerId){
-            Poker poker = new Poker(id, (Integer) pokerSortValues.get(id - 1));
+            Poker poker = new Poker(id, pokerSortValues.get(id - 1));
             pokers.add(poker);
         }
         return pokers;

@@ -1,6 +1,7 @@
 package com.example.a25cards.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -165,8 +166,148 @@ public class PokerPlayUtils {
                 for (int j = 0; j < num; j++){
                     proposal.add(pokers.get(i + j));
                 }
+                break;
             }
         }
         return proposal;
+    }
+
+    /**
+     * 查找能压三张牌的牌的方法，找到则返回推荐牌型，未找到则返回null
+     * @param pokers 当前手牌
+     * @param pokerType 要压的牌型
+     */
+    private static List<Poker> seekThree(List<Poker> pokers, PokerType pokerType){
+        if (pokers.size() < 3){
+            return null;
+        }
+        Map<Integer, Integer> kind = PokerTypeUtils.getKindMap(pokers);
+        int value = PokerUtils.MAX;
+        // 寻找牌
+        for (Map.Entry<Integer, Integer> entry:kind.entrySet()){
+            if (entry.getValue() >= 3 && entry.getKey() < value && entry.getKey() > pokerType.getValue()){
+                value = entry.getKey();
+            }
+        }
+        // 未找到
+        if (value == PokerUtils.MAX){
+            return null;
+        }
+        List<Poker> proposal = new ArrayList<>();
+        // 从手牌中找到相应的牌
+        for (int i = 0; i < pokers.size(); i++){
+            if (pokers.get(i).getOrderValue() == value){
+                for (int j = 0; j < 3; j++){
+                    proposal.add(pokers.get(i + j));
+                }
+                break;
+            }
+        }
+        return proposal;
+    }
+
+    /**
+     * 查找能压三带一对的牌的方法，找到则返回推荐牌型，未找到则返回null
+     * @param pokers 当前手牌
+     * @param pokerType 要压的牌型
+     */
+    private static List<Poker> seekThreePair(List<Poker> pokers, PokerType pokerType){
+        if (pokers.size() < 5){
+            return null;
+        }
+        Map<Integer, Integer> kind = PokerTypeUtils.getKindMap(pokers);
+        int threeValue = PokerUtils.MAX;// 三张牌的牌类型
+        int pairVale = PokerUtils.MAX;// 对子的牌类型
+        // 寻找牌
+        for (Map.Entry<Integer, Integer> entry:kind.entrySet()){
+            int value = entry.getValue();
+            int key = entry.getKey();
+            // 寻找三张牌的牌类型
+            if (value >= 3 && key < threeValue && key > pokerType.getValue()){
+                threeValue = entry.getKey();
+            }
+            // 三张牌的牌类型与对子的牌类型应不为同一种
+            if (value >= 2 && key != threeValue && key < pairVale){
+                pairVale = entry.getKey();
+            }
+        }
+        // 未找到
+        if (threeValue == PokerUtils.MAX || pairVale == PokerUtils.MAX){
+            return null;
+        }
+        List<Poker> proposal = new ArrayList<>();
+        // 从手牌中找到相应的牌
+        for (int i = 0; i < pokers.size(); i++){
+            if (pokers.get(i).getOrderValue() == threeValue && proposal.size() < 3){
+                proposal.add(pokers.get(i));
+            }
+            if (pokers.get(i).getOrderValue() == pairVale && proposal.size() < 2){
+                proposal.add((pokers.get(i)));
+            }
+        }
+        return proposal;
+    }
+
+    /**
+     * 查找能压顺子的牌的方法，找到则返回推荐牌型，未找到则返回null
+     * @param pokers 当前手牌
+     * @param pokerType 要压的牌型
+     */
+    private static List<Poker> seekStraight(List<Poker> pokers, PokerType pokerType){
+        if (pokers.size() < pokerType.getNum()){
+            return null;
+        }
+        List<Poker> proposal = new ArrayList<>();
+        int continuity = 0;// 牌类型连续数
+        int value = PokerUtils.MIN;// 上一种牌类型
+        for (int i = pokers.size() - 1; i >= 0; i--){
+            Poker poker = pokers.get(i);
+            if (poker.getOrderValue() > pokerType.getValue()){
+                // 牌类型连续
+                if (poker.getOrderValue() - value == 1){
+                    continuity++;
+                    proposal.add(poker);
+                }else if (poker.getOrderValue() == value){// 牌类型相同
+                    continue;
+                }else {// 牌类型不连续
+                    // 连续数重置为1
+                    continuity = 1;
+                    // 删除已添加的牌
+                    proposal.clear();
+                    // 添加当前牌
+                    proposal.add(poker);
+                }
+                // 牌已符合要求
+                if (continuity == pokerType.getNum()){
+                    break;
+                }
+            }
+        }
+        // 牌数量不足
+        if (proposal.size() < pokerType.getNum()){
+            return null;
+        }
+        return proposal;
+    }
+
+    /**
+     * 查找能压连对的牌的方法，找到则返回推荐牌型，未找到则返回null
+     * @param pokers 当前手牌
+     * @param pokerType 要压的牌型
+     */
+    private static List<Poker> seekStraightPair(List<Poker> pokers, PokerType pokerType){
+        if (pokers.size() < 6){
+            return null;
+        }
+        Map<Integer, Integer> kind = PokerTypeUtils.getKindMap(pokers);
+        List<Integer> pairList = new ArrayList<>();// 不少于两张牌的类型
+        for (Map.Entry<Integer, Integer> entry:kind.entrySet()){
+            if (entry.getValue() >= 2){
+                pairList.add(entry.getKey());
+            }
+        }
+        // 排序
+        Collections.sort(pairList);
+        return null;
     }
 }
