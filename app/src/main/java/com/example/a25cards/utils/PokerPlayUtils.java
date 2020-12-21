@@ -262,11 +262,16 @@ public class PokerPlayUtils {
         int value = PokerUtils.MIN;// 上一种牌类型
         for (int i = pokers.size() - 1; i >= 0; i--){
             Poker poker = pokers.get(i);
+            // 2，小王，大王不能出现在顺子中
+            if (poker.getOrderValue() >= 13){
+                break;
+            }
             if (poker.getOrderValue() > pokerType.getValue()){
                 // 牌类型连续
                 if (poker.getOrderValue() - value == 1){
                     continuity++;
                     proposal.add(poker);
+                    value = poker.getOrderValue();
                 }else if (poker.getOrderValue() == value){// 牌类型相同
                     continue;
                 }else {// 牌类型不连续
@@ -296,7 +301,7 @@ public class PokerPlayUtils {
      * @param pokerType 要压的牌型
      */
     private static List<Poker> seekStraightPair(List<Poker> pokers, PokerType pokerType){
-        if (pokers.size() < 6){
+        if (pokers.size() < pokerType.getNum()){
             return null;
         }
         Map<Integer, Integer> kind = PokerTypeUtils.getKindMap(pokers);
@@ -308,6 +313,183 @@ public class PokerPlayUtils {
         }
         // 排序
         Collections.sort(pairList);
-        return null;
+        List<Integer> type = new ArrayList<>();// 推荐的牌的类型
+        int continuity = 0;// 牌类型连续数
+        int value = PokerUtils.MIN;// 上一种牌类型
+        for (Integer pokerValue:pairList){
+            // 2，小王，大王不能出现在连对中
+            if (pokerValue >= 13){
+                break;
+            }
+            if (pokerValue <= pokerType.getValue()){
+                continue;
+            }
+            if (pokerValue - value == 1){
+                type.add(pokerValue);
+                continuity++;
+                value = pokerValue;
+            }else if (pokerValue == value) {
+                continue;
+            }else {
+                type.clear();
+                continuity = 1;
+                type.add(pokerValue);
+            }
+            if (continuity == pokerType.getNum() / 2){
+                break;
+            }
+        }
+        // 牌类型数量不足
+        if (continuity < pokerType.getNum() / 2){
+            return null;
+        }
+        List<Poker> proposal = new ArrayList<>();
+        int i = 0;
+        // 遍历手牌，将牌加入推荐牌型中
+        for (int j = 0; j < pokers.size(); j++){
+            if (pokers.get(j).getOrderValue() == type.get(i)){
+                proposal.add(pokers.get(j));
+                proposal.add(proposal.get(j + 1));
+                i++;
+                if (i == type.size()){
+                    break;
+                }
+            }
+        }
+        return proposal;
+    }
+
+    /**
+     * 查找能压飞机的牌的方法，找到则返回推荐牌型，未找到则返回null
+     * @param pokers 当前手牌
+     * @param pokerType 要压的牌型
+     */
+    private static List<Poker> seekPlane(List<Poker> pokers, PokerType pokerType){
+        if (pokers.size() < pokerType.getNum()){
+            return null;
+        }
+        Map<Integer, Integer> kind = PokerTypeUtils.getKindMap(pokers);
+        List<Integer> threeList = new ArrayList<>();// 不少于三张牌的类型
+        for (Map.Entry<Integer, Integer> entry:kind.entrySet()){
+            if (entry.getValue() >= 3){
+                threeList.add(entry.getKey());
+            }
+        }
+        // 排序
+        Collections.sort(threeList);
+        List<Integer> type = new ArrayList<>();// 推荐的牌的类型
+        int continuity = 0;// 牌类型连续数
+        int value = PokerUtils.MIN;// 上一种牌类型
+        for (Integer pokerValue:threeList){
+            //2不能出现在飞机的三张牌类型中
+            if (pokerValue >= 13){
+                break;
+            }
+            if (pokerValue <= pokerType.getValue()){
+                continue;
+            }
+            if (pokerValue - value == 1){
+                type.add(pokerValue);
+                continuity++;
+                value = pokerValue;
+            }else if (pokerValue == value) {
+                continue;
+            }else {
+                type.clear();
+                continuity = 1;
+                type.add(pokerValue);
+            }
+            if (continuity == pokerType.getNum() / 3){
+                break;
+            }
+        }
+        // 牌类型数量不足
+        if (continuity < pokerType.getNum() / 3){
+            return null;
+        }
+        List<Poker> proposal = new ArrayList<>();
+        int i = 0;
+        // 遍历手牌，将牌加入推荐牌型中
+        for (int j = 0; j < pokers.size(); j++){
+            if (pokers.get(j).getOrderValue() == type.get(i)){
+                proposal.add(pokers.get(j));
+                proposal.add(proposal.get(j + 1));
+                proposal.add(proposal.get(j + 2));
+                i++;
+                if (i == type.size()){
+                    break;
+                }
+            }
+        }
+        return proposal;
+    }
+
+    /**
+     * 查找能压飞机带翅膀的牌的方法，找到则返回推荐牌型，未找到则返回null
+     * @param pokers 当前手牌
+     * @param pokerType 要压的牌型
+     */
+    private static List<Poker> seekPlanePair(List<Poker> pokers, PokerType pokerType){
+        if (pokers.size() < pokerType.getNum()){
+            return null;
+        }
+        Map<Integer, Integer> kind = PokerTypeUtils.getKindMap(pokers);
+        List<Integer> threeList = new ArrayList<>();// 不少于三张牌的类型
+        List<Integer> pairList = new ArrayList<>();// 不少于两张牌的类型
+        for (Map.Entry<Integer, Integer> entry:kind.entrySet()){
+            if (entry.getValue() >= 2){
+                pairList.add(entry.getKey());
+            }
+            if (entry.getValue() >= 3){
+                threeList.add(entry.getKey());
+            }
+        }
+        // 排序
+        Collections.sort(threeList);
+        List<Integer> type = new ArrayList<>();// 推荐的牌的类型
+        int continuity = 0;// 牌类型连续数
+        int value = PokerUtils.MIN;// 上一种牌类型
+        for (Integer pokerValue:threeList){
+            //2不能出现在飞机的三张牌类型中
+            if (pokerValue >= 13){
+                break;
+            }
+            if (pokerValue <= pokerType.getValue()){
+                continue;
+            }
+            if (pokerValue - value == 1){
+                type.add(pokerValue);
+                continuity++;
+                value = pokerValue;
+            }else if (pokerValue == value) {
+                continue;
+            }else {
+                type.clear();
+                continuity = 1;
+                type.add(pokerValue);
+            }
+            if (continuity == pokerType.getNum() / 3){
+                break;
+            }
+        }
+        // 牌类型数量不足
+        if (continuity < pokerType.getNum() / 3){
+            return null;
+        }
+        List<Poker> proposal = new ArrayList<>();
+        int i = 0;
+        // 遍历手牌，将牌加入推荐牌型中
+        for (int j = 0; j < pokers.size(); j++){
+            if (pokers.get(j).getOrderValue() == type.get(i)){
+                proposal.add(pokers.get(j));
+                proposal.add(proposal.get(j + 1));
+                proposal.add(proposal.get(j + 2));
+                i++;
+                if (i == type.size()){
+                    break;
+                }
+            }
+        }
+        return proposal;
     }
 }
