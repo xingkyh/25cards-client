@@ -288,6 +288,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+
+    //绘制UI部分
     public GameView(Context context) {
         super(context);
         this.context = context;
@@ -350,7 +352,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         userCardsPaint(canvas);
     }
 
-    //修改用户出牌的动作
     private void buttonPaint(Canvas canvas) {
         canvas.drawBitmap(bt_setting, (float)0.93* screenWidth ,(float)0.01*screenHeight,null);
         canvas.drawBitmap(bt_back, (float)0.01* screenWidth ,(float)0.01*screenHeight,null);
@@ -462,23 +463,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
 
-
+    /**
+     * 修改用户的出牌UI的动作
+     * */
     private void userCardsPaint(Canvas canvas) {
-
         List<Poker> pokers = myDeck.getPokersHand();
-
         Matrix matrix = new Matrix();
-
-        //  matrix.setSkew(0, 1);
-        //  Bitmap apokerBack = Bitmap.createBitmap(pokerBack, 0, 0, pokerBack.getWidth(), pokerBack.getHeight(),matrix,true);
-     //   canvas.drawBitmap(pokerBack, (float)0.19*screenWidth, (float)0.2*screenHeight,null);
-
-
-        //  matrix = new Matrix();
-        //  matrix.setSkew(1, 0);
-        //  Bitmap bpokerBack = Bitmap.createBitmap(pokerBack, 0, 0, pokerBack.getWidth(), pokerBack.getHeight(),matrix,true);
-     //   canvas.drawBitmap(pokerBack, (float)0.73*screenWidth, (float)0.2*screenHeight,null);
-
         matrix.postScale((float)1.5, (float)1.5);
         for (int i=0; i<pokers.size(); i++) {
             Poker poker = pokers.get(i);
@@ -492,13 +482,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             thisCard = Bitmap.createBitmap(thisCard, 0, 0, thisCard.getWidth(),thisCard.getHeight(), matrix,true);
             canvas.drawBitmap(thisCard, myDeck.getPosX()[i], myDeck.getPosY()[i],null);
             String s = "" + myDeck.getPosX()[i];
-           /* getHolder().unlockCanvasAndPost(canvas);
-            try {
-                flushThread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            canvas = getHolder().lockCanvas();*/
+
         }
     }
 
