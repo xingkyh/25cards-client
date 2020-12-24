@@ -173,7 +173,7 @@ public class PokerTypeUtils {
                 return null;
             }
         }
-        return new PokerType(typeStraight, pokers.size(), pokers.get(0).getOrderValue());
+        return new PokerType(typeStraight, pokers.size(), pokers.get(pokers.size() - 1).getOrderValue());
     }
 
     /**
@@ -195,7 +195,7 @@ public class PokerTypeUtils {
                 }
             }
         }
-        return new PokerType(typeStraightPair, pokers.size(), pokers.get(0).getOrderValue());
+        return new PokerType(typeStraightPair, pokers.size(), pokers.get(pokers.size() - 1).getOrderValue());
     }
 
     /**
@@ -217,7 +217,7 @@ public class PokerTypeUtils {
                 }
             }
         }
-        return new PokerType(typePlane, pokers.size(), pokers.get(0).getOrderValue());
+        return new PokerType(typePlane, pokers.size(), pokers.get(pokers.size() - 1).getOrderValue());
     }
 
     /**

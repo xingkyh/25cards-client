@@ -2,7 +2,6 @@ package com.example.a25cards;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -10,14 +9,14 @@ import android.content.pm.ActivityInfo;
 
 
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.example.a25cards.myCard.SingleGameActivity;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -76,6 +75,13 @@ public class MenuActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MenuActivity.this, GameActivity.class);
                 intent.putExtra("name",username);
+                startActivity(intent);
+            }
+        });
+        ending.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MenuActivity.this, SingleGameActivity.class);
                 startActivity(intent);
             }
         });
