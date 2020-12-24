@@ -29,6 +29,7 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="landscape" />
+        <activity android:name=".myCard.SingleGameActivity" />
     </application>
 
 </manifest>
