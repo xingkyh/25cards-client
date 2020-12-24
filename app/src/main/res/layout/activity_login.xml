@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
     <LinearLayout
-    android:background="@drawable/ddzloginUI"
+    android:background="@drawable/ddzlogin"
     android:paddingTop="200dp"
     android:paddingRight="10dp"
     android:paddingLeft="10dp"
