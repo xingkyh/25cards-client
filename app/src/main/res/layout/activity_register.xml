@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 
-<LinearLayout android:paddingTop="10dp" android:paddingRight="10dp" android:paddingLeft="10dp" android:paddingBottom="10dp" android:orientation="vertical" android:layout_height="match_parent" android:layout_width="match_parent" xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout android:paddingTop="155dp"
+    android:paddingRight="10dp"
+    android:paddingLeft="10dp"
+    android:background="@drawable/ddz_regist"
+    android:paddingBottom="10dp" android:orientation="vertical" android:layout_height="match_parent" android:layout_width="match_parent" xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditText android:id="@+id/reet_username" android:layout_height="wrap_content" android:layout_width="fill_parent" android:hint="手机号/邮箱"/>
 
@@ -10,9 +14,19 @@
 
     <EditText android:id="@+id/reet_password_check" android:layout_height="wrap_content" android:layout_width="fill_parent" android:hint="再次输入密码" android:inputType="textPassword" android:layout_marginBottom="10dp" android:layout_marginTop="10dp"/>
 
-    <RelativeLayout android:layout_height="wrap_content" android:layout_width="fill_parent">
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="550dp">
 
-        <Button android:id="@+id/rebt_register" android:paddingRight="50dp" android:paddingLeft="50dp" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="注册" android:layout_centerVertical="true" android:layout_centerInParent="true" />
+        <Button android:id="@+id/rebt_register"
+            android:paddingRight="50dp"
+            android:paddingLeft="50dp"
+            android:layout_height="45dp"
+            android:layout_width="130dp"
+            android:text="注册"
+            android:background="@drawable/button_blue"
+            android:layout_centerVertical="true"
+            android:layout_centerInParent="true" />
 
     </RelativeLayout>
 
