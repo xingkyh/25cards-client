@@ -1,6 +1,7 @@
 package com.example.a25cards;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         // 全屏、隐藏状态栏
         setContentView(R.layout.activity_register);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         et_username =(EditText) findViewById(R.id.reet_username);
         et_password =(EditText) findViewById(R.id.reet_password);
         et_nickname =(EditText) findViewById(R.id.reet_nickname);
