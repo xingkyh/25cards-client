@@ -17,6 +17,7 @@ import android.graphics.Paint.Align;
 import android.graphics.Rect;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -189,10 +190,11 @@ public class MyView extends SurfaceView implements SurfaceHolder.Callback,
 			outList[i]=new Vector<Card>();
 		}
 		paint=new Paint();
-		paint.setColor(Color.WHITE);
+		paint.setColor(Color.YELLOW);
 		paint.setTextSize(cardWidth*2/3);
 		paint.setAntiAlias(true);
-		paint.setStyle(Style.STROKE);
+		paint.setStyle(Style.FILL);
+		paint.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD_ITALIC));
 		paint.setStrokeWidth(1.0f);
 		paint.setTextAlign(Align.CENTER);
 
