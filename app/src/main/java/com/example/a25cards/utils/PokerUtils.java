@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class PokerUtils {
     // 存放牌的大小的list
-    private static List pokerSortValues = Arrays.asList(new int[]{
+    private static final List<Integer> pokerSortValues = Arrays.asList(
             1,1,1,1,// 3
             2,2,2,2,// 4
             3,3,3,3,// 5
@@ -28,7 +28,11 @@ public class PokerUtils {
             12,12,12,12,// A
             13,13,13,13,// 2
             14,15// 小王，大王
-    });
+    );
+    // 大于所有牌的大小的常量值，后续需要用到
+    public static final int MAX = 16;
+    // 小于所有牌的大小的常量值，后续需要用到
+    public static final int MIN = 0;
 
     /**
      * 随机生成两副牌
