@@ -106,7 +106,7 @@ public class EventAction {
 				}
 				//不出
 				if(view.buttonText[1].equals("不要")){
-					if(view.outList[0].size()==0&&view.outList[2].size()==0)
+					if(view.outList[0].size()==0&&view.outList[2].size()==0&&view.outList[3].size()==0)
 					{
 						Log.i("mylog", "不能不不要");
 						return;

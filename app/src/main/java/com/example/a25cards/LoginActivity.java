@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Looper.prepare();
-                        String path = "http://192.168.1.130:8080/25Cards/Login?username="+username+"&password="+password;
+                        String path = "http://114.55.95.58:8080/25Cards/Login?username="+username+"&password="+password;
                         try {
                             String result = null;
                             if(username.equals("admin")){

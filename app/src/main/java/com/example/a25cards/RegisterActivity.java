@@ -55,7 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
                         public void run() {
                             Looper.prepare();
                             try {
-                                String path = "http://192.168.1.130:8080/25Cards/Register?username="+username+"&password="+password;
+                                String path = "http://114.55.95.58:8080/25Cards/Register?username="+username+"&password="+password;
                                 URL url = new URL(path);
                                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                                 connection.setDoOutput(true); //使用URL进行输出

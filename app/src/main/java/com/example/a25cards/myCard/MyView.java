@@ -28,6 +28,8 @@ import android.view.SurfaceView;
 
 import com.example.a25cards.R;
 
+import javax.xml.parsers.FactoryConfigurationError;
+
 public class MyView extends SurfaceView implements SurfaceHolder.Callback,
 		Runnable {
 
@@ -677,6 +679,8 @@ public class MyView extends SurfaceView implements SurfaceHolder.Callback,
 			flag=1;
 		if(playerList[2].size()==0)
 			flag=2;
+		if(playerList[3].size()==0)
+			flag=3;
 		if(flag>-1){
 			for(int i=0;i<108;i++)
 			{
