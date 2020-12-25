@@ -55,16 +55,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap bt_nocall;
     private Bitmap dz;
     private Bitmap nm;
-    //通过AssetManager对应用程序的原始资源文件进行访问
     private AssetManager assetManager;
     private int screenWidth ;//屏幕宽度
 
 
     private int screenHeight;//屏幕宽度
     private final float rate = 1.65f; //图片放大比例
-    public static final int TIME_IN_FRAME = 30;
-    public Deck lastDeck = new Deck();
-    private boolean myTurn = true;
+    public static final int TIME_IN_FRAME = 30;  //出牌时间30S
+    public Deck lastDeck = new Deck();          //更新牌局界面，例如出牌了之后重新设置每个牌的位置
+    private boolean myTurn = true;          //是否是自己回合
 
     public Deck getLastDeck() {
         return lastDeck;
@@ -205,7 +204,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     class FlushThread extends Thread {
         private final int span = 10;
-        private boolean gaming = true;
+        private boolean gaming = true;      //定义是否游戏中
         private final GameView game;
         private final SurfaceHolder holder;
 
@@ -217,44 +216,44 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         @Override
         public void run() {
-            Canvas canvas;
+            Canvas canvas;          //绘制图像的类Canvas
             boolean flag = true;
-            game.setState(GameState.READY);
-            while (this.gaming) {
+            game.setState(GameState.READY);     //准备阶段
+            while (this.gaming) {           //判断是否处于游戏中
                 String s = "" + state;
                 canvas = null;
-                long startTime = System.currentTimeMillis();
+                long startTime = System.currentTimeMillis();   //定义开始时间
                 try {
-                    canvas = holder.lockCanvas(null);
+                    canvas = holder.lockCanvas(null);  //锁住整张画布，绘画完成后也更新整张画布的内容到屏幕上
                     synchronized (this.holder) {
-                        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                        game.baseDraw(canvas);
-                        int state = game.getState();
-                        if (state==GameState.MY_DISCARD) {
+                        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);   //设置画布颜色，大概就是桌面颜色
+                        game.baseDraw(canvas);          //基础任务和牌桌的绘制
+                        int state = game.getState();       //获取当前游戏阶段
+                        if (state==GameState.MY_DISCARD) {   //如果轮到自己出牌
                             if (flag) {
-                                resetStatus();
+                                resetStatus();      //重置玩家阶段
                                 flag = false;
                             }
-                            game.myDraw(canvas);
-                        } else if (state==GameState.DEAL_CARDS) {
+                            game.myDraw(canvas);        //重新绘制，更新出手牌变化和牌桌上上次出牌的变化，还有按钮的变化（出牌和不出这个）
+                        } else if (state==GameState.DEAL_CARDS) {               //发牌
                             if (flag) {
                                 (new CardsDistributionThread(game)).start();
                                 flag = false;
                             }
                             game.distributionDraw(canvas);
-                        } else if (state==GameState.CALL_SCORE) {
+                        } else if (state==GameState.CALL_SCORE) {           //叫分
                             game.callDraw(canvas);
-                        }else if (state ==GameState.READY){
+                        }else if (state ==GameState.READY){         //按了准备按钮之后绘制图像
                             game.readyDraw(canvas);
-                        }else if(state == GameState.GET_CARDS){
+                        }else if(state == GameState.GET_CARDS){         //这个暂时不知道，类的定义里面也没写这个属性是用来干什么的
                             game.distributionDraw(canvas);
-                        }else if(state == GameState.GAME_END){
+                        }else if(state == GameState.GAME_END){      //游戏结束
 
                         }
                     }
                 } finally {
                     if (canvas != null) {
-                        this.holder.unlockCanvasAndPost(canvas);
+                        this.holder.unlockCanvasAndPost(canvas);        //解锁画布
                     }
                 }
 
@@ -288,8 +287,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-
-    //绘制UI部分
     public GameView(Context context) {
         super(context);
         this.context = context;
@@ -297,25 +294,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         clientThread = new ClientThread(handler,this);
         // 客户端启动ClientThread线程创建网络连接、读取来自服务器的数据
         new Thread(clientThread).start();
-        getHolder().addCallback(this);
+        getHolder().addCallback(this);   //获得SurfaceView所对应的Surface的部分或全部视图，目的是实现surfaceHolder.Callback接口
         flushThread= new FlushThread(getHolder(), this);
         assetManager = context.getAssets();
-        //获得资源文件
         Resources resources = this.getResources();
-        //利用DisplayMetrics类获取屏幕大小
-        DisplayMetrics dm  = resources.getDisplayMetrics();
-        //获得显示器的逻辑密度
+        DisplayMetrics dm  = resources.getDisplayMetrics();   //获取屏幕大小，自适应
         float density = dm.density;
-        //获得屏幕的像素宽度，单位是px
         screenWidth = dm.widthPixels;
-        //获得屏幕的像素高度，单位是px
         screenHeight = dm.heightPixels;
         init();
     }
 
     private void baseDraw(Canvas canvas) {
-        // 绘制牌桌，使用Canvas类绘制图形画布
-        //deskPaint中绘制该区域画布
+        // 牌桌
         deskPaint(canvas);
 
         // 人物
@@ -332,17 +323,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         buttonPaint(canvas);
     }
 
-    public void callDraw(Canvas canvas) {
+    public void callDraw(Canvas canvas) {//叫分重绘牌桌
 
         userCardsPaint(canvas);
 
         buttonPaint(canvas);
     }
 
-    public void readyDraw(Canvas canvas) {
+    public void readyDraw(Canvas canvas) {//准备重绘牌桌
 
         userPaint(canvas);
-        if(isMyTurn()){
+        if(isMyTurn()){     //轮到自己回合
             buttonPaint(canvas);
         }
     }
@@ -352,9 +343,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         userCardsPaint(canvas);
     }
 
+
     private void buttonPaint(Canvas canvas) {
+        //定义绘画按钮区域
         canvas.drawBitmap(bt_setting, (float)0.93* screenWidth ,(float)0.01*screenHeight,null);
         canvas.drawBitmap(bt_back, (float)0.01* screenWidth ,(float)0.01*screenHeight,null);
+
         //readyButtonPaint(canvas);
         if(getState()==GameState.CALL_SCORE){
             if(isMyTurn()){
@@ -368,7 +362,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
     }
-
+        //以下是叫分，离开，不出，准备等按钮的绘制
     private void startButtonPaint(Canvas canvas) {
         canvas.drawBitmap(bt_nocall, (float)0.28* screenWidth ,(float)0.58*screenHeight,null);
         canvas.drawBitmap(bt_call, (float)0.55* screenWidth ,(float)0.58*screenHeight,null);
@@ -385,13 +379,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawBitmap(bt_discard, (float)0.7* screenWidth ,(float)0.58*screenHeight,null);
     }
     private void deskPaint(Canvas canvas) {
-        //使用drawBitmap来对Bitmap图片对象进行偏移，左、顶偏移均为0，同时不用画笔
-
         canvas.drawBitmap(desk, 0, 0, null);
     }
 
     private void init() {
-        //存入对应assets资源文件底下的图像资源，以便后续利用AssetManager进行图像访问
         String deskSrc = "images/牌桌.jpg";
         String cardSrc = "images/方块2.png";
         String pokerBackSrc = "images/牌背面.png";
@@ -408,8 +399,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         String dzSrc = "images/dz.png";
         String nmSrc = "images/nm.png";
 
-        try {
-            //利用BitmapFactory来从指定输入流（在这里是assets底下的各种图片）中解析、创建BitMap对象
+        try {//获得目录下的图片
             desk = BitmapFactory.decodeStream(assetManager.open(deskSrc));
             card = BitmapFactory.decodeStream(assetManager.open(cardSrc));
             pokerBack = BitmapFactory.decodeStream(assetManager.open(pokerBackSrc));
@@ -428,14 +418,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             //屏幕自适应大小
             Matrix matrix = new Matrix();
-            //利用potscale实现对牌桌的缩放以适应屏幕，同时需要强转为float型才符合函数要求，由于不是固定死的内容，所以这里并不设置中心点
             matrix.postScale((float)(1.0*screenWidth/desk.getWidth()), (float)(1.0*screenHeight/desk.getHeight()));
-            //在这里就实现了对牌桌的创建BitMap对象，同时利用Matrix矩阵对象而形成X轴Y轴的缩放
             desk = Bitmap.createBitmap(desk, 0, 0, desk.getWidth(),desk.getHeight(),matrix,true);
 
-            //以下是对牌各种BitMap对象进行缩放处理，包括有展示出来的扑克牌背面，以及准备图形等
             matrix = new Matrix();
             matrix.postScale(rate, rate);
+            //对下列图片进行缩放处理
             pokerBack = Bitmap.createBitmap(pokerBack, 0, 0, pokerBack.getWidth(), pokerBack.getHeight(),matrix,true);
             bt_ready = Bitmap.createBitmap(bt_ready, 0, 0, bt_ready.getWidth(), bt_ready.getHeight(),matrix,true);
             bt_leave = Bitmap.createBitmap(bt_leave, 0, 0, bt_leave.getWidth(), bt_leave.getHeight(),matrix,true);
@@ -458,23 +446,34 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         spanX = (float)0.025*screenWidth;
         initX = (float) ((float) getScreenWidth()/2.0);
         initY = (float)0.75*screenHeight;
-        //因为已经做过缩放处理，所以此时要对应乘上缩放比例
         cardWidth = (float)(pokerBack.getWidth()*1.5);
     }
 
 
-    /**
-     * 修改用户的出牌UI的动作
-     * */
-    private void userCardsPaint(Canvas canvas) {
+
+    private void userCardsPaint(Canvas canvas) {   //用户牌的绘制
+
         List<Poker> pokers = myDeck.getPokersHand();
+
         Matrix matrix = new Matrix();
+
+        //  matrix.setSkew(0, 1);
+        //  Bitmap apokerBack = Bitmap.createBitmap(pokerBack, 0, 0, pokerBack.getWidth(), pokerBack.getHeight(),matrix,true);
+     //   canvas.drawBitmap(pokerBack, (float)0.19*screenWidth, (float)0.2*screenHeight,null);
+
+
+        //  matrix = new Matrix();
+        //  matrix.setSkew(1, 0);
+        //  Bitmap bpokerBack = Bitmap.createBitmap(pokerBack, 0, 0, pokerBack.getWidth(), pokerBack.getHeight(),matrix,true);
+     //   canvas.drawBitmap(pokerBack, (float)0.73*screenWidth, (float)0.2*screenHeight,null);
+
+        matrix = new Matrix();
         matrix.postScale((float)1.5, (float)1.5);
         for (int i=0; i<pokers.size(); i++) {
             Poker poker = pokers.get(i);
-            String name = "images/" + poker.getKind() + poker.getPoints() + ".png";
+            String name = "images/" + poker.getKind() + poker.getPoints() + ".png"; //扑克牌的花色和点数
             try {
-                inputStream = assetManager.open(name);
+                inputStream = assetManager.open(name);  //获取asset里面的图片
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -482,11 +481,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             thisCard = Bitmap.createBitmap(thisCard, 0, 0, thisCard.getWidth(),thisCard.getHeight(), matrix,true);
             canvas.drawBitmap(thisCard, myDeck.getPosX()[i], myDeck.getPosY()[i],null);
             String s = "" + myDeck.getPosX()[i];
-
+           /* getHolder().unlockCanvasAndPost(canvas);
+            try {
+                flushThread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            canvas = getHolder().lockCanvas();*/
         }
     }
 
-    private void userPaint(Canvas canvas) {
+    private void userPaint(Canvas canvas) {     //用户位置绘制
         if(((myseat+1)%4) == boss){
             canvas.drawBitmap(dz,(float) (screenWidth-dz.getWidth()-screenWidth*0.01), (float)0.3*screenHeight ,null);
         }else{
@@ -504,7 +509,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    private void lastDeckPaint(Canvas canvas) {
+    private void lastDeckPaint(Canvas canvas) {     //上次桌面的绘制
         PokerTool.getPos(this, lastDeck);
         List<Poker> pokers = lastDeck.getPokersHand();
         Matrix matrix = new Matrix();
@@ -524,47 +529,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-
-    private void statusChange(int index) {
-        Poker poker = myDeck.getPokersHand().get(index);
-        int points = poker.getPoints();
-        if (poker.isSelected()) {
-            myDeck.setSumCards(myDeck.getSumCards()-1);
-            PokerTool.removeFromMap(myDeck.getCardsMap(), points);
+        //这个我不确定理解得对不对
+    private void statusChange(int index) {         //发牌阶段
+        Poker poker = myDeck.getPokersHand().get(index);    //得到下标所属扑克的点数
+        int points = poker.getPoints();     //获得扑克点数
+        if (poker.isSelected()) {       //如果扑克被选中
+            myDeck.setSumCards(myDeck.getSumCards()-1);             //牌堆牌-1
+            PokerTool.removeFromMap(myDeck.getCardsMap(), points);      //扑克工具类中的方法，发出后移出牌堆
             poker.setSelected(false);
-            myDeck.getPosY()[index] += spanY;
-        } else {
-            myDeck.setSumCards(myDeck.getSumCards()+1);
-            PokerTool.addToMap(myDeck.getCardsMap(), points);
-            poker.setSelected(true);
-            myDeck.getPosY()[index] -= spanY;
+            myDeck.getPosY()[index] += spanY;       //重构每张扑克位置
+        } else {                                //如果放下
+            myDeck.setSumCards(myDeck.getSumCards()+1); //计算扑克总和
+            PokerTool.addToMap(myDeck.getCardsMap(), points);   //重新计入牌堆
+            poker.setSelected(true);            //可以被选中
+            myDeck.getPosY()[index] -= spanY;       //重构每张扑克位置
         }
     }
 
 
-    private void butCallJudge(float x, float y){
-        if(x>=0.28*screenWidth && x<=0.28*screenWidth+bt_call.getWidth() && y>=0.58*screenHeight && y<=0.58*screenHeight+bt_call.getHeight()){
-            setMyTurn(false);
-            Message msg = new Message();
-            msg.what = 0x5678;
-            clientThread.revHandler.sendMessage(msg);
-        }else if(x>=0.55*screenWidth && x<=0.55*screenWidth+bt_nocall.getWidth() && y>=0.58*screenHeight && y<=0.58*screenHeight+bt_nocall.getHeight()){
-            setMyTurn(false);
-            Message msg = new Message();
-            msg.what = 0x1234;
-            clientThread.revHandler.sendMessage(msg);
-        }
-    }
-
-    private void butReadyJudge(float x, float y){
-        //点击准备
-        if(x >= 0.55*screenWidth && x <= 0.55*screenWidth+bt_ready.getWidth() && y >= 0.58*screenHeight && y<=0.58*screenHeight+bt_ready.getHeight()){
-            setMyTurn(false);
-            Message msg = new Message();
-            msg.what = 0x789;
-            clientThread.revHandler.sendMessage(msg);
-        }
-    }
 
     private void playJudge(float x, float y) {
 
@@ -588,6 +570,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 if (PokerTool.canPlayCards(lastType, lastWeight, myDeck)) {    // 出牌判定
 
                 }
+
+                String text = "type：" + myDeck.getType()
+                        + "  weight: " + myDeck.getWeight()
+                        + "  mapInf: " + myDeck.getCardsMap();
+           //     Toast.makeText(context, text,Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -643,8 +630,30 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    //叫分传给服务器
+    private void butCallJudge(float x, float y){
+        if(x>=0.28*screenWidth && x<=0.28*screenWidth+bt_call.getWidth() && y>=0.58*screenHeight && y<=0.58*screenHeight+bt_call.getHeight()){
+            setMyTurn(false);
+            Message msg = new Message();
+            msg.what = 0x5678;
+            clientThread.revHandler.sendMessage(msg);
+        }else if(x>=0.55*screenWidth && x<=0.55*screenWidth+bt_nocall.getWidth() && y>=0.58*screenHeight && y<=0.58*screenHeight+bt_nocall.getHeight()){
+            setMyTurn(false);
+            Message msg = new Message();
+            msg.what = 0x1234;
+            clientThread.revHandler.sendMessage(msg);
+        }
+    }
 
-
+    private void butReadyJudge(float x, float y){
+        //点击准备
+        if(x >= 0.55*screenWidth && x <= 0.55*screenWidth+bt_ready.getWidth() && y >= 0.58*screenHeight && y<=0.58*screenHeight+bt_ready.getHeight()){
+            setMyTurn(false);
+            Message msg = new Message();
+            msg.what = 0x789;
+            clientThread.revHandler.sendMessage(msg);
+        }
+    }
     @Override
     public boolean onTouchEvent(MotionEvent event) {    // 点击事件
         try{

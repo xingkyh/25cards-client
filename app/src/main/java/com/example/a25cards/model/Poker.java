@@ -4,7 +4,10 @@ package com.example.a25cards.model;
 import com.example.a25cards.ui.CardSlideThread;
 
 public class Poker {
-
+    /**
+     * 下面定义的是牌的数值，用来比较大小的，还有种类
+     *  kind是牌的花色，selectd是判断是否选中牌
+     */
     private int points;
     private String kind;
     public static int SMALL_JOKER = 100;
